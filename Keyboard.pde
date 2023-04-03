@@ -13,6 +13,7 @@ static public class Keyboard {
     public static final int A = 65;
     public static final int D = 68;
     public static final int E = 69;
+    public static final int TAB = 9;
     public static final int DOWN = 40;
     
     public static void update() {

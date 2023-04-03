@@ -24,6 +24,8 @@ void setup() {
  camera = new Camera(player);
  player.isFocused = true;
  
+
+ 
  for(int i = 0; i < 10; i++) {
   Circle c = new Circle(random(width), random(height));
   circles.add(c);

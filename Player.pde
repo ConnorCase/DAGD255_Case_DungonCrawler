@@ -34,6 +34,11 @@ class Player extends AABB {
           this.isFocused = false;
         }
       }
+      
+      if (Keyboard.onDown(Keyboard.TAB)) {
+       //Inventory 
+       
+      }
 
       if (Keyboard.isDown(Keyboard.A)) {
         velocity.x = -playerSpeed;
