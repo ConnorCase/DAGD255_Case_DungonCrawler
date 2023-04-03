@@ -7,15 +7,15 @@ class Camera {
  
   Camera(Player p) {
     target = p;
-    tx = target.pos.x - width/2;
-    ty = target.pos.y - height/2;
+    tx = target.x - width/2;
+    ty = target.y - height/2;
     x = tx;
     y = ty;
   }
   
   void update() {
-    tx = target.pos.x - width/2;
-    ty = target.pos.y - height/2;
+    tx = target.x - (width/2) / zoomAmount;
+    ty = target.y - (height/2) / zoomAmount;
     dx = tx - x;
     dy = ty - y;
     distance = sqrt(dx*dx + dy*dy);
