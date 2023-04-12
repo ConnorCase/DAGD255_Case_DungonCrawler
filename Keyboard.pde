@@ -1,7 +1,7 @@
 static public class Keyboard {
  
-    private static boolean[] keys = new boolean[128];
-    private static boolean[] pKeys = new boolean[128];
+    private static boolean[] keys = new boolean[200];
+    private static boolean[] pKeys = new boolean[200];
     public static final int LEFT = 37;
     public static final int RIGHT = 39;
     public static final int SPACE = 32;

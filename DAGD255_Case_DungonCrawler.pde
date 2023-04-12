@@ -10,10 +10,33 @@ Player player2;
 Player camTarget;
 Camera camera;
 
-
+Enemy enemy;
 
 ArrayList<Circle> circles = new ArrayList();
 ArrayList<Bullet> bullets = new ArrayList();
+
+ArrayList<Item> items = new ArrayList();
+
+float itemSpawnTime = 1;
+
+//Tilemap
+//1 is wall
+//2 is floor
+// int [][] maprow = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+int [][] tilemap = {
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+};
+int rows, cols;
+int cellWidth, cellHeight;
 
 void setup() {
  size(1280, 720);
@@ -24,7 +47,11 @@ void setup() {
  camera = new Camera(player);
  player.isFocused = true;
  
-
+ enemy = new Enemy();
+ 
+ Inventory.app = this;
+ Inventory.createInventory();
+ Inventory.createCells(4, 5, 50, 150);
  
  for(int i = 0; i < 10; i++) {
   Circle c = new Circle(random(width), random(height));
@@ -45,6 +72,14 @@ void draw() {
   // UPDATE STUFF
   camera.update(); // This must always be the first thing you update.
     
+  
+  itemSpawnTime -= dt;
+  if(itemSpawnTime <= 0) {
+    Item i = new Item("Banana");
+    items.add(i);
+    itemSpawnTime = 1;
+  }
+  
   for(int i = 0; i < bullets.size(); i++) {
     Bullet b = bullets.get(i);
     b.update();
@@ -52,10 +87,24 @@ void draw() {
     if(b.isDead) bullets.remove(i);
   }
   
+  for(int i = 0; i < items.size(); i++) {
+    Item b = items.get(i);
+    b.update();
+    
+    if(b.checkCollision(player)) {
+      b.isDead = true;
+      Inventory.addItems(b.itemName, 1);
+    }
+    
+    if(b.isDead) items.remove(i);
+  }
   
   
+  enemy.update();
   player.update();
   player2.update();
+  
+  Inventory.update();
 
 
   // LATE UPDATE
@@ -74,12 +123,23 @@ void draw() {
     b.draw();
   }
   
+  for(int i = 0; i < items.size(); i++) {
+    Item b = items.get(i);
+    b.draw();
+  }
+  
+  enemy.draw();
   player.draw();
   player2.draw();
+  
+  
   // popMatrix here
   popMatrix();
   
+  
+  
   // Then draw HUD
+  if(player.isInventory) Inventory.draw();
   
 }
 
@@ -100,6 +160,7 @@ void mouseReleased() {
 }
 
 void keyPressed() {
+  // println(keyCode);
   Keyboard.handleKeyDown(keyCode);
 }
 

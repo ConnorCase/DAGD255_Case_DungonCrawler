@@ -4,6 +4,9 @@ class Player extends AABB {
   float playerSpeed = 250;
   boolean isFocused = false;
   boolean isHovered = false;
+  boolean isInventory = false;
+  
+  PVector midPoint = new PVector();
 
   Player(float xPos, float yPos) {
     x = xPos;
@@ -19,6 +22,9 @@ class Player extends AABB {
     if (isFocused) { // UPDATE INPUT ACTIONS IF THIS PLAYER IS IN FOCUS
 
       calcAngleToMouse();
+      
+      calcMidPoint();
+      println(midPoint);
 
       if (leftPressed && !pLeftPressed) {
         float bx = x + cos(angle) * halfW; // Pushing the bullet to spawn at the tip of the player.
@@ -35,9 +41,10 @@ class Player extends AABB {
         }
       }
       
-      if (Keyboard.onDown(Keyboard.TAB)) {
-       //Inventory 
-       
+      if(Keyboard.onDown(Keyboard.TAB)) {
+        // DISPLAY INVENTORY
+        isInventory = !isInventory;
+        Inventory.arrangeItems();
       }
 
       if (Keyboard.isDown(Keyboard.A)) {
@@ -92,5 +99,14 @@ class Player extends AABB {
     float my = camera.y + mouseY/zoomAmount;
     if(mx > x-halfW && mx < x+halfW && my > y-halfH && my < y+halfH) isHovered = true;
     else isHovered = false;
+  }
+  
+  void calcMidPoint() {
+    float dx = enemy.x - x;
+    float dy = enemy.y - y;
+    float dis = sqrt(dx * dx + dy * dy);
+    midPoint = new PVector(dx/2, dy/2);
+    if(dis > 720) camera.isLockOn = false;
+    else camera.isLockOn = true;
   }
 }
